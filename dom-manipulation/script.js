@@ -9,13 +9,15 @@ async function fetchQuotesFromServer() {
         const response = await fetch(SERVER_URL);
         if (!response.ok) throw new Error('Network response was not ok');
         const serverQuotes = await response.json();
-        mergeQuotes(serverQuotes);
+        syncQuotes(serverQuotes); // Use syncQuotes to handle merging
     } catch (error) {
         console.error('Error fetching quotes from server:', error);
+        notifyUser('Failed to fetch quotes from server.');
     }
 }
 
-function mergeQuotes(serverQuotes) {
+// Sync Quotes Function
+function syncQuotes(serverQuotes) {
     const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
     const mergedQuotes = [...new Map([...localQuotes, ...serverQuotes].map(q => [q.text, q])).values()];
     localStorage.setItem('quotes', JSON.stringify(mergedQuotes));
@@ -23,7 +25,7 @@ function mergeQuotes(serverQuotes) {
     quotes.push(...mergedQuotes); // Update quotes array
     displayRandomQuote();
     populateCategories();
-    notifyUser('Quotes updated from server.');
+    notifyUser('Quotes synced with server.');
 }
 
 // Display Random Quote
