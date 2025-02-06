@@ -27,9 +27,11 @@ document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 // Function to create the quote addition form dynamically
 function createAddQuoteForm() {
     const formContainer = document.createElement("div");
+    
     document.body.appendChild(formContainer);
     document.getElementById("addQuoteButton").addEventListener("click", addQuote);
     document.getElementById("exportButton").addEventListener("click", exportToJsonFile);
+    populateCategories();
 }
 
 // Function to add a new quote
@@ -54,6 +56,7 @@ function addQuote() {
     const newQuote = { text, category };
     quotes.push(newQuote);
     saveQuotes();
+    populateCategories();
     
     newQuoteText.value = "";
     newQuoteCategory.value = "";
@@ -86,6 +89,7 @@ function importFromJsonFile(event) {
             if (Array.isArray(importedQuotes)) {
                 quotes.push(...importedQuotes);
                 saveQuotes();
+                populateCategories();
                 alert("Quotes imported successfully!");
             } else {
                 alert("Invalid file format.");
@@ -97,18 +101,38 @@ function importFromJsonFile(event) {
     fileReader.readAsText(event.target.files[0]);
 }
 
-// Load last viewed quote from session storage
-function loadLastViewedQuote() {
-    const lastQuote = sessionStorage.getItem("lastViewedQuote");
-    if (lastQuote) {
-        const quoteDisplay = document.getElementById("quoteDisplay");
-        const quoteData = JSON.parse(lastQuote);
-        quoteDisplay.innerHTML = `<p><strong>${quoteData.category}:</strong> "${quoteData.text}"</p>`;
-    }
+// Populate categories dynamically
+function populateCategories() {
+    const categoryFilter = document.getElementById("categoryFilter");
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+    const uniqueCategories = [...new Set(quotes.map(q => q.category))];
+    uniqueCategories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+}
+
+// Function to filter quotes based on selected category
+function filterQuotes() {
+    const selectedCategory = document.getElementById("categoryFilter").value;
+    localStorage.setItem("selectedCategory", selectedCategory);
+    const filteredQuotes = selectedCategory === "all" ? quotes : quotes.filter(q => q.category === selectedCategory);
+    const quoteDisplay = document.getElementById("quoteDisplay");
+    quoteDisplay.innerHTML = filteredQuotes.map(q => `<p><strong>${q.category}:</strong> "${q.text}"</p>`).join("\n");
+}
+
+// Load last selected category filter
+function loadLastSelectedFilter() {
+    const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+    document.getElementById("categoryFilter").value = selectedCategory;
+    filterQuotes();
 }
 
 // Initialize the form creation and load last viewed quote when the page loads
 document.addEventListener("DOMContentLoaded", () => {
     createAddQuoteForm();
+    loadLastSelectedFilter();
     loadLastViewedQuote();
 });
