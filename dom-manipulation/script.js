@@ -25,7 +25,7 @@ function syncQuotes(serverQuotes) {
     quotes.push(...mergedQuotes); // Update quotes array
     displayRandomQuote();
     populateCategories();
-    notifyUser('Quotes synced with server.');
+    notifyUser('Quotes synced with server!'); // Add notification for successful sync
 }
 
 // Display Random Quote
