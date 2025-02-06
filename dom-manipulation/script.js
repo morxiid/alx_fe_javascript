@@ -21,6 +21,7 @@ document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 function addQuote() {
     const newQuoteText = document.getElementById("newQuoteText").value.trim();
     const newQuoteCategory = document.getElementById("newQuoteCategory").value.trim();
+    const quoteDisplay = document.getElementById("quoteDisplay");
     
     if (newQuoteText === "" || newQuoteCategory === "") {
         alert("Please enter both a quote and a category.");
@@ -32,4 +33,7 @@ function addQuote() {
     document.getElementById("newQuoteCategory").value = "";
     
     alert("Quote added successfully!");
+    
+    // Update the displayed quote with the new quote added
+    quoteDisplay.innerHTML = `<p><strong>${newQuoteCategory}:</strong> "${newQuoteText}"</p>`;
 }
