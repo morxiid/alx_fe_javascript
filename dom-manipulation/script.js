@@ -19,21 +19,34 @@ document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
 // Function to add a new quote
 function addQuote() {
-    const newQuoteText = document.getElementById("newQuoteText").value.trim();
-    const newQuoteCategory = document.getElementById("newQuoteCategory").value.trim();
+    const newQuoteText = document.getElementById("newQuoteText");
+    const newQuoteCategory = document.getElementById("newQuoteCategory");
     const quoteDisplay = document.getElementById("quoteDisplay");
     
-    if (newQuoteText === "" || newQuoteCategory === "") {
+    if (!newQuoteText || !newQuoteCategory) {
+        console.error("Input fields not found.");
+        return;
+    }
+    
+    const text = newQuoteText.value.trim();
+    const category = newQuoteCategory.value.trim();
+    
+    if (text === "" || category === "") {
         alert("Please enter both a quote and a category.");
         return;
     }
     
-    quotes.push({ text: newQuoteText, category: newQuoteCategory });
-    document.getElementById("newQuoteText").value = "";
-    document.getElementById("newQuoteCategory").value = "";
+    const newQuote = { text, category };
+    quotes.push(newQuote);
+    
+    newQuoteText.value = "";
+    newQuoteCategory.value = "";
     
     alert("Quote added successfully!");
     
-    // Update the displayed quote with the new quote added
-    quoteDisplay.innerHTML = `<p><strong>${newQuoteCategory}:</strong> "${newQuoteText}"</p>`;
+    // Update the DOM with the newly added quote
+    quoteDisplay.innerHTML = `<p><strong>${newQuote.category}:</strong> "${newQuote.text}"</p>`;
 }
+
+// Ensure the addQuote function is bound to the correct button
+document.getElementById("addQuoteButton").addEventListener("click", addQuote);
