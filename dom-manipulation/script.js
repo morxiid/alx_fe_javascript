@@ -23,6 +23,7 @@ function mergeQuotes(serverQuotes) {
     quotes.push(...mergedQuotes); // Update quotes array
     displayRandomQuote();
     populateCategories();
+    notifyUser('Quotes updated from server.');
 }
 
 // Display Random Quote
@@ -39,7 +40,7 @@ function displayRandomQuote() {
 document.getElementById('newQuote').addEventListener('click', displayRandomQuote);
 
 // Add New Quote
-function addQuote() {
+async function addQuote() {
     const newQuoteText = document.getElementById('newQuoteText').value.trim();
     const newQuoteCategory = document.getElementById('newQuoteCategory').value.trim();
     if (newQuoteText && newQuoteCategory) {
@@ -48,12 +49,31 @@ function addQuote() {
         localStorage.setItem('quotes', JSON.stringify(quotes));
         populateCategories();
         displayRandomQuote();
+        await postQuoteToServer(newQuote);
     } else {
         alert('Please enter both quote text and category.');
     }
 }
 
 document.getElementById('addQuoteButton').addEventListener('click', addQuote);
+
+// Post Quote to Server
+async function postQuoteToServer(quote) {
+    try {
+        const response = await fetch(SERVER_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(quote),
+        });
+        if (!response.ok) throw new Error('Network response was not ok');
+        notifyUser('Quote posted to server successfully.');
+    } catch (error) {
+        console.error('Error posting quote to server:', error);
+        notifyUser('Failed to post quote to server.');
+    }
+}
 
 // Populate Category Dropdown
 function populateCategories() {
@@ -81,7 +101,7 @@ function importFromJsonFile(event) {
                 quotes.push(...importedQuotes);
                 localStorage.setItem('quotes', JSON.stringify(quotes));
                 populateCategories();
-                alert('Quotes imported successfully!');
+                notifyUser('Quotes imported successfully!');
             } else {
                 alert('Invalid JSON format. Please ensure the file contains an array of quotes.');
             }
@@ -107,6 +127,23 @@ function exportToJsonFile() {
 }
 
 document.getElementById('exportButton').addEventListener('click', exportToJsonFile);
+
+// Notify User
+function notifyUser(message) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.right = '20px';
+    notification.style.backgroundColor = 'lightgreen';
+    notification.style.padding = '10px';
+    notification.style.borderRadius = '5px';
+    document.body.appendChild(notification);
+    setTimeout(() => document.body.removeChild(notification), 3000);
+}
+
+// Periodically Check for New Quotes
+setInterval(fetchQuotesFromServer, 60000); // Check every 60 seconds
 
 // Initialize Application
 window.addEventListener('load', () => {
