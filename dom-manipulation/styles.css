@@ -1,0 +1,37 @@
+body{
+    text-align: center;
+    align-items: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.quoteDisplay{
+    width: 40%;
+    height: 50px;
+    background-color: rgb(227, 206, 247);
+    border: 1px solid black;
+    border-radius: 15px;
+    margin: 10px auto;
+}
+
+button{
+    height: 25px;
+    background-color: brown;
+    border: 0px;
+    border-radius: 10%;
+}
+
+.new-quote{
+    width: 40%;
+    margin: 10px auto;
+    border: black solid 1px;
+    height: auto;
+    border-radius: 10%;
+}
+
+input{
+    margin: 10px auto;
+    width: 90%;
+    border-radius: 5%;
+    border: 1px;
+    height: 30px;
+}
