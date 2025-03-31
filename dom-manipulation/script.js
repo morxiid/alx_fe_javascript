@@ -11,6 +11,10 @@ let quotes = [
     }
 ];
 
+const createAddQuoteForm(){
+    const name = 
+};
+
 // fun to display a random quotes
 function showRandomQuote() {
     const quoteDisplay = document.getElementById('quoteDisplay');
@@ -20,6 +24,7 @@ function showRandomQuote() {
                             <em>(${randomQuote.category})</em>`
 };
 
+
 //fun to add a new quote
 function addQuote() {
     const newQuoteText = document.getElementById('newQuoteText').value;
@@ -27,6 +32,7 @@ function addQuote() {
 
     if(newQuoteText && newQuoteCategory){
         quotes.push({text: newQuoteText, category: newQuoteCategory});
+        //clear the inputs fields
         document.getElementById('newQuoteText').value = '';
         document.getElementById('newQuoteCategory').value = '';
         showRandomQuote();
