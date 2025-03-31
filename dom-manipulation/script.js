@@ -12,7 +12,8 @@ let quotes = [
 ];
 
 const createAddQuoteForm(){
-    const name = 
+    const name = createElement();
+    const namee = appendchild();
 };
 
 // fun to display a random quotes
